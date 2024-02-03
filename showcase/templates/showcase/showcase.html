@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Sportsman trophies{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyBk9S25DAPqTmL5uu6g7Em1C6wPXHu0wU" crossorigin="anonymous">
+        {% load static %}
+        <style>
+            body {
+                transition: background-color 0.5s;
+            }
+            .dark-mode {
+                background-color: #000000;
+                color: #FFFFFF;
+            }
+            .light-mode {
+                background-color: #FFFFFF;
+                color: #000000;
+            }
+        </style>
+    </head>
+    <body class = "align-items-stretch">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <select class="form-select" id="sport-select" name="type_sport" onchange="changeSport()">
+                <option value="football" {% if request.GET.type_sport == 'football' %}selected{% endif %}>Football</option>
+                <option value="basketball" {% if request.GET.type_sport == 'basketball' %}selected{% endif %}>Basketball</option>
+                <option value="american_football" {% if request.GET.type_sport == 'american_football' %}selected{% endif %}>American football</option>
+                <option value="baseball" {% if request.GET.type_sport == 'baseball' %}selected{% endif %}>Baseball</option>
+                <option value="ice_hockey" {% if request.GET.type_sport == 'ice_hockey' %}selected{% endif %}>Ice hockey</option>
+                <option value="tennis" {% if request.GET.type_sport == 'tennis' %}selected{% endif %}>Tennis</option>
+                <option value="boxing" {% if request.GET.type_sport == 'boxing' %}selected{% endif %}>Boxing</option>
+                <option value="F1" {% if request.GET.type_sport == 'F1' %}selected{% endif %}>F1</option>
+                <option value="golf" {% if request.GET.type_sport == 'golf' %}selected{% endif %}>Golf</option>
+                <option value="sprint" {% if request.GET.type_sport == 'sprint' %}selected{% endif %}>Sprint</option>
+                <option value="middle_distance" {% if request.GET.type_sport == 'middle_distance' %}selected{% endif %}>Middle distance</option>
+                <option value="long_distance" {% if request.GET.type_sport == 'long_distance' %}selected{% endif %}>Long distance</option>
+                <option value="swimming" {% if request.GET.type_sport == 'swimming' %}selected{% endif %}>Swimming</option>
+                <option value="badminton" {% if request.GET.type_sport == 'badminton' %}selected{% endif %}>Badminton</option>
+                <option value="table_tennis" {% if request.GET.type_sport == 'table_tennis' %}selected{% endif %}>Table tennis</option>
+                <option value="snooker" {% if request.GET.type_sport == 'snooker' %}selected{% endif %}>Snooker</option>
+            </select>
+            <select class="form-select" id="player-select" name="player" onchange="changePlayer()">
+                {% for n in name_list %}
+                    <option value="{{n}}" {% if request.GET.player == n %}selected{% endif %}>{{n}}</option>
+                {% endfor %}
+            </select>
+            <button onclick="changeBackgroundColor()">Change Background Color</button>
+        </nav>
+
+        <div class="container">
+            <div style="display:inline-block; margin-right: 50px"><img src="{% static image_url %}" width="150"></div>
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px; margin-right: 50px">
+                    <!-- <caption>Regular Season</caption> -->
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>Name:</td>
+                            <td>{{name}}</td>
+                        </tr>
+                        <tr>
+                            <td>Play Age:</td>
+                            <td>{{start_age}} - {{end_age}}</td>
+                        </tr>
+                        <tr>
+                            <td>Play Year:</td>
+                            <td>{{start_year}} - {{end_year}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            {% if request.GET.type_sport == 'basketball' %}
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px; margin-right: 50px">
+                    <caption>Regular Season</caption>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th style="width:20%"></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>Total Points:</td>
+                            <td>{{total_score}}</td>
+                            <td>Average Points:</td>
+                            <td>{{ave_score}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Rebounds:</td>
+                            <td>{{total_rebound}}</td>
+                            <td>Average Rebounds:</td>
+                            <td>{{ave_rebound}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Assists:</td>
+                            <td>{{total_assist}}</td>
+                            <td>Average Assists:</td>
+                            <td>{{ave_assist}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Steals:</td>
+                            <td>{{total_steal}}</td>
+                            <td>Average Steals:</td>
+                            <td>{{ave_steal}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Blocks:</td>
+                            <td>{{total_block}}</td>
+                            <td>Average Blocks:</td>
+                            <td>{{ave_block}}</td>
+                    </tbody>
+                </table>
+            </div>
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px;">
+                    <caption>Playoffs</caption>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th style="width:20%"></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>Total Points:</td>
+                            <td>{{total_score_playoff}}</td>
+                            <td>Average Points:</td>
+                            <td>{{ave_score_playoff}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Rebounds:</td>
+                            <td>{{total_rebound_playoff}}</td>
+                            <td>Average Rebounds:</td>
+                            <td>{{ave_rebound_playoff}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Assists:</td>
+                            <td>{{total_assist_playoff}}</td>
+                            <td>Average Assists:</td>
+                            <td>{{ave_assist_playoff}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Steals:</td>
+                            <td>{{total_steal_playoff}}</td>
+                            <td>Average Steals:</td>
+                            <td>{{ave_steal_playoff}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Blocks:</td>
+                            <td>{{total_block_playoff}}</td>
+                            <td>Average Blocks:</td>
+                            <td>{{ave_block_playoff}}</td>
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {% if request.GET.type_sport == 'sprint' %}
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px; margin-right: 50px">
+                    <caption>Personal Record</caption>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>100m:</td>
+                            <td>{{100m}}</td>
+                        </tr>
+                        <tr>
+                            <td>200m:</td>
+                            <td>{{200m}}</td>
+                        </tr>
+                        <tr>
+                            <td>400m:</td>
+                            <td>{{400m}}</td>
+                        </tr>
+                        <tr>
+                            <td>4*100m:</td>
+                            <td>{{4_100m}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px;">
+                    <caption>Olympics Record</caption>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>100m:</td>
+                            <td>{{o_100m}}</td>
+                        </tr>
+                        <tr>
+                            <td>200m:</td>
+                            <td>{{o_200m}}</td>
+                        </tr>
+                        <tr>
+                            <td>400m:</td>
+                            <td>{{o_400m}}</td>
+                        </tr>
+                        <tr>
+                            <td>4*100m:</td>
+                            <td>{{o_4_100m}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {% if request.GET.type_sport == 'middle_distance' %}
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px; margin-right: 50px">
+                    <caption>Personal Record</caption>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>800m:</td>
+                            <td>{{800m}}</td>
+                        </tr>
+                        <tr>
+                            <td>1500m:</td>
+                            <td>{{1500m}}</td>
+                        </tr>
+                        <tr>
+                            <td>Mile:</td>
+                            <td>{{Mile}}</td>
+                        </tr>
+                        <tr>
+                            <td>3000m:</td>
+                            <td>{{3000m}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {% if request.GET.type_sport == 'long_distance' %}
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px; margin-right: 50px">
+                    <caption>Personal Record</caption>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>5000m:</td>
+                            <td>{{5000m}}</td>
+                        </tr>
+                        <tr>
+                            <td>10000m:</td>
+                            <td>{{10000m}}</td>
+                        </tr>
+                        <tr>
+                            <td>HM:</td>
+                            <td>{{HM}}</td>
+                        </tr>
+                        <tr>
+                            <td>M:</td>
+                            <td>{{M}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {% if request.GET.type_sport == 'swimming' %}
+            <div style="display:inline-block">
+                <table class="table" style="font-size:20px; margin-right: 50px">
+                    <caption>Personal Record</caption>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>100m freestyle:</td>
+                            <td>{{100m_freestyle}}</td>
+                        </tr>
+                        <tr>
+                            <td>200m freestyle:</td>
+                            <td>{{200m_freestyle}}</td>
+                        </tr>
+                        <tr>
+                            <td>400m freestyle:</td>
+                            <td>{{400m_freestyle}}</td>
+                        </tr>
+                        <tr>
+                            <td>100m backstroke:</td>
+                            <td>{{100m_backstroke}}</td>
+                        </tr>
+                        <tr>
+                            <td>100m breaststroke:</td>
+                            <td>{{100m_breaststroke}}</td>
+                        </tr>
+                        <tr>
+                            <td>100m butterfly:</td>
+                            <td>{{100m_butterfly}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+
+        {% for ind in section_index %}
+            <div id="{{ind}}"></div>
+        {% endfor %}
+
+        {% if request.GET.type_sport == 'basketball' %}
+        <p style="font-size:20px;">Participating teams:</p>
+        <div>
+            {% for image_url in team_img_url_list %}
+                <img src="{% static image_url %}" width="44">
+            {% endfor %}
+            {% for image_url in team_img_url_list_2 %}
+                <img src="{% static image_url %}" width="22">
+            {% endfor %}
+        </div>
+
+        <p style="font-size:20px;">Main participating countries:</p>
+        <div>
+            {% for image_url in country_img_url_list %}
+                <img src="{% static image_url %}" width="40">
+            {% endfor %}
+            {% for image_url in country_img_url_list_2 %}
+                <img src="{% static image_url %}" width="20">
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
+        <script>
+            var type_sport = "{{type}}";
+            var imagePath = "playershowcase/honors_" + type_sport;
+            var image_name = {{image_name|safe}}
+            var image_size = {{image_size}}
+            var section_index = {{section_index}}
+            var honor_number = {{honor_number}}
+            var n_honors = image_name.length
+
+            for (var j = 0; j < n_honors; j++) {
+                if (section_index.includes(j)) {
+                    var container = document.getElementById(String(j));
+                }
+                var n = honor_number[j];
+                var imageUrl = "{% static '' %}" + imagePath + "/" + image_name[j] + ".png";
+                for (var i = 0; i < n; i++) {
+                    var img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.width = String(image_size[j]);
+                    container.appendChild(img);
+                }
+            }
+        </script>
+
+        <script>
+            var darkMode = false;
+
+            function changeSport() {
+                var select = document.getElementById("sport-select");
+                var selectedOption = select.options[select.selectedIndex].value;
+                
+                // Get existing filter parameters
+                var queryParams = new URLSearchParams(window.location.search);
+                
+                // Add sorting option to the parameters
+                queryParams.set('type_sport', selectedOption);
+                
+                // Redirect to the same page with the updated parameters
+                window.location.href = window.location.pathname + "?" + queryParams.toString();
+            }
+            function changePlayer() {
+                var select = document.getElementById("player-select");
+                var selectedOption = select.options[select.selectedIndex].value;
+                
+                // Get existing filter parameters
+                var queryParams = new URLSearchParams(window.location.search);
+                
+                // Add sorting option to the parameters
+                queryParams.set('player', selectedOption);
+                
+                // Redirect to the same page with the updated parameters
+                window.location.href = window.location.pathname + "?" + queryParams.toString();
+            }
+            function changeBackgroundColor() {
+                darkMode = !darkMode;
+                document.body.className = darkMode ? 'dark-mode' : 'light-mode';
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyBk9S25DAPqTmL5uu6g7Em1C6wPXHu0wU" crossorigin="anonymous"></script>
+    </body>
+</html>
