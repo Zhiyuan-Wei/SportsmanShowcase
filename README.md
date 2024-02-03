@@ -12,3 +12,7 @@ To run it, you need to have Python installed. Then you need to install Django an
 ```
 py manage.py runserver
 ```
+
+Finally, you run this address in your browser. Bingo!
+
+[http://127.0.0.1:8000/showcase](http://127.0.0.1:8000/showcase)
